@@ -6,6 +6,19 @@ use Xgenious\Paymentgateway\Facades\XgPaymentGateway;
 
 class PaymentGatewayRequestHelper
 {
+    public static function shurjopay(): Shurjopay
+    {
+        $shurjopay = new Shurjopay();
+        $shurjopay->setUsername(get_static_option('shurjopay_sandbox_username') ?? get_static_option('shurjopay_live_username')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setPassword(get_static_option('shurjopay_sandbox_password') ?? get_static_option('shurjopay_live_password')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setOrderPrefix(get_static_option('shurjopay_sandbox_order_prefix') ?? get_static_option('shurjopay_live_order_prefix')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setCurrency(self::globalCurrency());
+        $shurjopay->setEnv(get_static_option('shurjopay_test_mode') === 'on'); //env must set as boolean, string will not work
+        $shurjopay->setExchangeRate(self::usdConversionValue()); // if BDT not set as currency
+
+        return $shurjopay;
+    }
+
     public static function paypal(){
         $paypal = XgPaymentGateway::paypal();
         $paypal->setClientId(get_static_option('paypal_sandbox_client_id') ?? get_static_option('paypal_live_client_id')); // provide sandbox id if payment env set to true, otherwise provide live credentials

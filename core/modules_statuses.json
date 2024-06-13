@@ -1,1 +1,23 @@
-{"GeneralSettings":true,"PaymentGatewaySettings":true,"Pages":true,"CountryManage":true,"Service":true,"EmailTemplate":true,"Wallet":true,"Subscription":true,"Chat":true,"SupportTicket":true,"Controller":true,"FreelancerChatController":true,"RolePermission":true,"NewsLetter":true,"Faq":true,"PluginManage":true,"Blog":true,"Integrations":true,"PromoteFreelancer":true,"FreelancerLevel":true,"SecurityManage":true}
+{
+  "GeneralSettings": true,
+  "PaymentGatewaySettings": true,
+  "Pages": true,
+  "CountryManage": true,
+  "Service": true,
+  "EmailTemplate": true,
+  "Wallet": true,
+  "Subscription": true,
+  "Chat": true,
+  "SupportTicket": true,
+  "Controller": true,
+  "FreelancerChatController": true,
+  "RolePermission": true,
+  "NewsLetter": true,
+  "Faq": true,
+  "PluginManage": true,
+  "Blog": true,
+  "Integrations": true,
+  "PromoteFreelancer": true,
+  "FreelancerLevel": true,
+  "SecurityManage": true
+}

@@ -9,6 +9,7 @@ class PaymentGatewayListController extends Controller
 {
     public function payment_gateway_list()
     {
+        $shurjopay_logo = get_attachment_image_by_id(get_static_option('shurjopay_preview_logo'));
         $paypal_logo = get_attachment_image_by_id(get_static_option('paypal_preview_logo'));
         $paytm_logo = get_attachment_image_by_id(get_static_option('paytm_preview_logo'));
         $razorpay_logo = get_attachment_image_by_id(get_static_option('razorpay_preview_logo'));
@@ -34,6 +35,24 @@ class PaymentGatewayListController extends Controller
         $manual_payment_logo = get_attachment_image_by_id(get_static_option('manual_payment_preview_logo'));
 
         $data = [];
+        if (get_static_option('shurjopay_gateway') === 'on'){
+            $data['shurjopay'] =[
+                'preview_logo' => $shurjopay_logo['img_url'],
+                'sandbox_client_id' => get_static_option('shurjopay_sandbox_client_id'),
+                'sandbox_client_secret' => get_static_option('shurjopay_sandbox_client_secret'),
+                'sandbox_app_id' => get_static_option('shurjopay_sandbox_app_id'),
+                'live_app_id' => get_static_option('shurjopay_live_app_id'),
+                'payment_action' => get_static_option('shurjopay_payment_action'),
+                'currency' => get_static_option('shurjopay_currency'),
+                'notify_url' => get_static_option('shurjopay_notify_url'),
+                'locale' => get_static_option('shurjopay_locale'),
+                'validate_ssl' => get_static_option('shurjopay_validate_ssl'),
+                'live_client_id' => get_static_option('shurjopay_live_client_id'),
+                'live_client_secret' => get_static_option('shurjopay_live_client_secret'),
+                'gateway' => get_static_option('shurjopay_gateway'),
+                'test_mode' => get_static_option('shurjopay_test_mode'),
+            ];
+        }
         if (get_static_option('paypal_gateway') === 'on'){
             $data['paypal'] =[
                 'preview_logo' => $paypal_logo['img_url'],

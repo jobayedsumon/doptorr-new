@@ -8,7 +8,7 @@ class PaymentGatewayList
 {
     public static function listOfPaymentGateways()
     {
-        $payment_gateway_list = ['manual_payment', 'paypal', 'mollie', 'paytm', 'stripe', 'razorpay', 'flutterwave', 'paystack', 'marcadopago', 'instamojo', 'cashfree', 'payfast', 'midtrans', 'squareup', 'cinetpay', 'paytabs', 'billplz', 'zitopay', 'toyyibpay', 'pagali', 'authorize_dot_net', 'sitesway','iyzipay'];
+        $payment_gateway_list = ['manual_payment', 'shurjopay', 'paypal', 'mollie', 'paytm', 'stripe', 'razorpay', 'flutterwave', 'paystack', 'marcadopago', 'instamojo', 'cashfree', 'payfast', 'midtrans', 'squareup', 'cinetpay', 'paytabs', 'billplz', 'zitopay', 'toyyibpay', 'pagali', 'authorize_dot_net', 'sitesway','iyzipay'];
         // append payment gateway name from modules
 //        $modules_payment_gateway = (new ModuleMetaData())->getAllPaymentGatewayList();
         $modules_payment_gateway = [];

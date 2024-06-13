@@ -476,7 +476,7 @@ function render_payment_gateway_for_form()
 
     $output .= '<input type="hidden" name="selected_payment_gateway" value="' . get_static_option('site_default_payment_gateway') . '">';
 
-    $all_gateway = ['paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans','squareup','cinetpay','paytabs','billplz','zitopay'];
+    $all_gateway = ['paypal', 'shurjopay', 'manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans','squareup','cinetpay','paytabs','billplz','zitopay'];
 
     $output .= '<ul>';
     $cash_on_delivery = (bool) get_static_option('cash_on_delivery_gateway');
@@ -507,7 +507,7 @@ function render_payment_gateway_for_form2($except=[])
     $output = '<div class="payment-gateway-wrapper payment_getway_image">';
 
     $output .= '<input type="hidden" name="selected_payment_gateway" value="' . get_static_option('site_default_payment_gateway') . '">';
-    $all_gateway = ['paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans','squareup','cinetpay','paytabs','billplz','zitopay'];
+    $all_gateway = ['paypal', 'shurjopay', 'manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans','squareup','cinetpay','paytabs','billplz','zitopay'];
     $output .= '<ul>';
     foreach ($all_gateway as $gateway) {
         if (in_array($gateway,$except)){
@@ -2828,7 +2828,7 @@ function freelancer_rating_for_level($freelancer_id)
 function payment_gateway_list_for_api()
 
 {
-    $all_gateways = ['wallet','paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans','squareup','cinetpay','paytabs','billplz','zitopay','sitesway','toyyibpay','authorize_dot_net','iyzipay','pagali'];
+    $all_gateways = ['wallet', 'shurjopay', 'paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans','squareup','cinetpay','paytabs','billplz','zitopay','sitesway','toyyibpay','authorize_dot_net','iyzipay','pagali'];
     return $all_gateways;
 }
 

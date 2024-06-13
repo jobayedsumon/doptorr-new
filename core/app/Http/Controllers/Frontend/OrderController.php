@@ -31,7 +31,7 @@ class OrderController extends Controller
     //confirm order
     public function user_order_confirm(Request $request)
     {
-        $all_gateway = ['wallet','paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans','squareup','cinetpay','paytabs','billplz','zitopay','sitesway','toyyibpay','authorize_dot_net'];
+        $all_gateway = ['wallet', 'shurjopay', 'paypal','manual_payment','mollie','paytm','stripe','razorpay','flutterwave','paystack','marcadopago','instamojo','cashfree','payfast','midtrans','squareup','cinetpay','paytabs','billplz','zitopay','sitesway','toyyibpay','authorize_dot_net'];
         if(empty($request->selected_payment_gateway)){
             return back()->with(toastr_warning(__('Please select a payment gateway before place an order2')));
         }

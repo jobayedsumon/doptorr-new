@@ -40,6 +40,21 @@ class PaymentGatewaySettingsController extends Controller
     {
         if($request->isMethod('post')){
             $field_rules = [
+                // shurjopay
+                'shurjopay_preview_logo' => 'required|string|max:191',
+                'shurjopay_sandbox_username' => 'nullable|string|max:191',
+                'shurjopay_sandbox_password' => 'nullable|string|max:191',
+                'shurjopay_sandbox_order_prefix' => 'nullable|string|max:191',
+                'shurjopay_live_order_prefix' => 'nullable|string|max:191',
+                'shurjopay_payment_action' => 'nullable|string|max:191',
+                'shurjopay_currency' => 'nullable|string|max:191',
+                'shurjopay_notify_url' => 'nullable|string|max:191',
+                'shurjopay_locale' => 'nullable|string|max:191',
+                'shurjopay_validate_ssl' => 'nullable|string|max:191',
+                'shurjopay_live_username' => 'nullable|string|max:191',
+                'shurjopay_live_password' => 'nullable|string|max:191',
+                'shurjopay_gateway' => 'nullable|string|max:191',
+                'shurjopay_test_mode' => 'nullable|string|max:191',
                 // paypal
                 'paypal_preview_logo' => 'required|string|max:191',
                 'paypal_sandbox_client_id' => 'nullable|string|max:191',

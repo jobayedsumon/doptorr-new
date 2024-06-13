@@ -35,6 +35,78 @@
                                 <div class="accordion-wrapper">
                                     <div id="accordion-payment">
 
+{{--                                        Shurjopay--}}
+                                        <div class="card">
+                                            <div class="card-header" id="shurjopay_settings">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#shurjopay_settings_content"
+                                                            aria-expanded="false">
+                                                        <span class="page-title"> {{__('Shurjopay Settings')}}</span>
+                                                    </button>
+                                                </h5>
+                                            </div>
+
+                                            <div id="shurjopay_settings_content" class="collapse show"
+                                                 data-parent="#accordion-payment">
+                                                <div class="card-body">
+                                                    <div class="payment-notice alert alert-warning">
+                                                        <p>{{__('Notice: If Shurjopay does not support your currency, it will convert the value of your currency to BDT based on the current exchange rate of your currency.')}}</p>
+                                                    </div>
+                                                    <div class="switch">
+                                                        <label class="label-title mt-3"><strong>{{__('Enable Shurjopay')}}</strong></label>
+                                                        <input class="custom-switch" type="checkbox" id="shurjopay_gateway" name="shurjopay_gateway" @if(!empty(get_static_option('shurjopay_gateway'))) checked @endif>
+                                                        <label class="switch-label" for="shurjopay_gateway">{{__('Enable Shurjopay')}}</label>
+                                                    </div>
+                                                    <div class="switch">
+                                                        <label class="label-title mt-3"><strong>{{__('Enable Test Mode For Shurjopay')}}</strong></label>
+                                                        <input class="custom-switch" type="checkbox" id="shurjopay_test_mode" name="shurjopay_test_mode" @if(!empty(get_static_option('shurjopay_test_mode'))) checked @endif>
+                                                        <label class="switch-label" for="shurjopay_test_mode">{{__('Enable Test Mode For Shurjopay')}}</label>
+                                                    </div>
+                                                    <div class="single-input mt-3">
+                                                        <x-backend.image :title="__('Shurjopay Logo')" :name="'shurjopay_preview_logo'" :dimentions="'160x50'"/>
+                                                    </div>
+                                                    <div class="single-input">
+                                                        <label for="shurjopay_sandbox_client_id" class="label-title mt-3">{{__('Shurjopay Sandbox Username')}}</label>
+                                                        <input type="text" name="shurjopay_sandbox_username"
+                                                               class="form-control"
+                                                               value="{{get_static_option('shurjopay_sandbox_username')}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="shurjopay_sandbox_client_secret" class="label-title mt-3">{{__('Shurjopay Sandbox Password')}}</label>
+                                                        <input type="text" name="shurjopay_sandbox_password"
+                                                               class="form-control"
+                                                               value="{{get_static_option('shurjopay_sandbox_password')}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="shurjopay_sandbox_app_id" class="label-title mt-3">{{__('Shurjopay Sandbox Order Prefix')}}</label>
+                                                        <input type="text" name="shurjopay_sandbox_order_prefix"
+                                                               class="form-control"
+                                                               value="{{get_static_option('shurjopay_sandbox_order_prefix')}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="shurjopay_live_username" class="label-title mt-3">{{__('Shurjopay Live Username')}}</label>
+                                                        <input type="text" name="shurjopay_live_username"
+                                                               class="form-control"
+                                                               value="{{get_static_option('shurjopay_live_username')}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="shurjopay_live_password" class="label-title mt-3">{{__('Shurjopay Live Password')}}</label>
+                                                        <input type="text" name="shurjopay_live_password"
+                                                               class="form-control"
+                                                               value="{{get_static_option('shurjopay_live_password')}}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="shurjopay_live_order_prefix" class="label-title mt-3">{{__('Shurjopay Live Order Prefix')}}</label>
+                                                        <input type="text" name="shurjopay_live_order_prefix"
+                                                               class="form-control"
+                                                               value="{{get_static_option('shurjopay_live_order_prefix')}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="card">
                                             <div class="card-header" id="paypal_settings">
                                                 <h5 class="mb-0">

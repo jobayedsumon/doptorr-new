@@ -284,7 +284,15 @@ class OrderService
         session()->put('proposal_id',$request->proposal_id_for_order);
         $description = sprintf(__('Order id #%1$d Email: %2$s, Name: %3$s'),$last_order_id,$email,$name);
 
-        if ($request->selected_payment_gateway === 'paypal') {
+        if ($request->selected_payment_gateway === 'shurjopay') {
+            try {
+                return PaymentGatewayRequestHelper::shurjopay()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_order_id,$email,$name,route('pro.shurjopay.ipn.order')));
+            }catch (\Exception $e){
+                toastr_error($e->getMessage());
+                return back();
+            }
+        }
+        elseif ($request->selected_payment_gateway === 'paypal') {
             try {
                 return PaymentGatewayRequestHelper::paypal()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_order_id,$email,$name,route('pro.paypal.ipn.order')));
             }catch (\Exception $e){
