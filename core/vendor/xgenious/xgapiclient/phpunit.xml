@@ -1,7 +1,0 @@
-<phpunit>
-    <!-- ... other configurations ... -->
-    
-   <!-- <bootstrap>tests/global_functions.php</bootstrap> -->
-    
-    <!-- ... other configurations ... -->
-</phpunit>

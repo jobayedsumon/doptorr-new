@@ -1,0 +1,5 @@
+.idea/
+core/.env
+core/storage/framework/
+core/storage/logs/
+core/vendor/

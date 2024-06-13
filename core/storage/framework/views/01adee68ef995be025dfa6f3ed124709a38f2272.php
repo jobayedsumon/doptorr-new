@@ -1,2 +1,0 @@
-<link rel="stylesheet" href="<?php echo e(asset('assets/common/css/jquery.dataTables.min.css')); ?>">
-<?php /**PATH /home/1279107.cloudwaysapps.com/hkvzvsqtvn/public_html/core/resources/views/components/data-table/data-table-css.blade.php ENDPATH**/ ?>
