@@ -1,12 +1,15 @@
-@extends('backend.layout.master')
+@php use App\Helper\PaymentGatewayList; @endphp@extends('backend.layout.master')
 
 @section('title', __('Payment Gateway Settings'))
 
 @section('style')
     <x-media.css/>
-    <x-summernote.summernote-css />
+    <x-summernote.summernote-css/>
     <style>
-        .accordion-wrapper .card {margin-bottom: 20px;}
+        .accordion-wrapper .card {
+            margin-bottom: 20px;
+        }
+
         .card {
             border: none;
             border-radius: 4px;
@@ -14,7 +17,11 @@
             -webkit-transition: all 0.3s ease 0s;
             transition: all 0.3s ease 0s;
         }
-        .summernote-wrapper .note-editing-area {height: 400px;}
+
+        .summernote-wrapper .note-editing-area {
+            height: 400px;
+        }
+
         .note-editor.note-airframe .note-editing-area .note-editable, .note-editor.note-frame .note-editing-area .note-editable {
             height: 100%;
         }
@@ -35,21 +42,17 @@
                                 <div class="accordion-wrapper">
                                     <div id="accordion-payment">
 
-{{--                                        Shurjopay--}}
+                                        {{--                                        Shurjopay--}}
                                         <div class="card">
                                             <div class="card-header" id="shurjopay_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#shurjopay_settings_content"
-                                                            aria-expanded="false">
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#shurjopay_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Shurjopay Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="shurjopay_settings_content" class="collapse show"
-                                                 data-parent="#accordion-payment">
+                                            <div id="shurjopay_settings_content" class="collapse show" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="payment-notice alert alert-warning">
                                                         <p>{{__('Notice: If Shurjopay does not support your currency, it will convert the value of your currency to BDT based on the current exchange rate of your currency.')}}</p>
@@ -64,45 +67,40 @@
                                                         <input class="custom-switch" type="checkbox" id="shurjopay_test_mode" name="shurjopay_test_mode" @if(!empty(get_static_option('shurjopay_test_mode'))) checked @endif>
                                                         <label class="switch-label" for="shurjopay_test_mode">{{__('Enable Test Mode For Shurjopay')}}</label>
                                                     </div>
+                                                    <div class="switch">
+                                                        <label class="label-title mt-3"><strong>{{__('Enable Shurjopay Worldwide')}}</strong></label>
+                                                        <input class="custom-switch" type="checkbox" id="shurjopay_enable_worldwide" name="shurjopay_enable_worldwide" @if(!empty(get_static_option('shurjopay_enable_worldwide'))) checked @endif>
+                                                        <label class="switch-label" for="shurjopay_enable_worldwide">{{__('Enable Shurjopay Worldwide')}}</label>
+                                                    </div>
                                                     <div class="single-input mt-3">
                                                         <x-backend.image :title="__('Shurjopay Logo')" :name="'shurjopay_preview_logo'" :dimentions="'160x50'"/>
                                                     </div>
-                                                    <div class="single-input">
-                                                        <label for="shurjopay_sandbox_client_id" class="label-title mt-3">{{__('Shurjopay Sandbox Username')}}</label>
-                                                        <input type="text" name="shurjopay_sandbox_username"
-                                                               class="form-control"
-                                                               value="{{get_static_option('shurjopay_sandbox_username')}}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="shurjopay_sandbox_client_secret" class="label-title mt-3">{{__('Shurjopay Sandbox Password')}}</label>
-                                                        <input type="text" name="shurjopay_sandbox_password"
-                                                               class="form-control"
-                                                               value="{{get_static_option('shurjopay_sandbox_password')}}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="shurjopay_sandbox_app_id" class="label-title mt-3">{{__('Shurjopay Sandbox Order Prefix')}}</label>
-                                                        <input type="text" name="shurjopay_sandbox_order_prefix"
-                                                               class="form-control"
-                                                               value="{{get_static_option('shurjopay_sandbox_order_prefix')}}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="shurjopay_live_username" class="label-title mt-3">{{__('Shurjopay Live Username')}}</label>
-                                                        <input type="text" name="shurjopay_live_username"
-                                                               class="form-control"
-                                                               value="{{get_static_option('shurjopay_live_username')}}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="shurjopay_live_password" class="label-title mt-3">{{__('Shurjopay Live Password')}}</label>
-                                                        <input type="text" name="shurjopay_live_password"
-                                                               class="form-control"
-                                                               value="{{get_static_option('shurjopay_live_password')}}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="shurjopay_live_order_prefix" class="label-title mt-3">{{__('Shurjopay Live Order Prefix')}}</label>
-                                                        <input type="text" name="shurjopay_live_order_prefix"
-                                                               class="form-control"
-                                                               value="{{get_static_option('shurjopay_live_order_prefix')}}">
-                                                    </div>
+                                                    @if(!empty(get_static_option('shurjopay_enable_worldwide')) || PaymentGatewayList::isIpFromBangladeshOrLocal())
+                                                        <div class="single-input">
+                                                            <label for="shurjopay_sandbox_client_id" class="label-title mt-3">{{__('Shurjopay Sandbox Username')}}</label>
+                                                            <input type="text" name="shurjopay_sandbox_username" class="form-control" value="{{get_static_option('shurjopay_sandbox_username')}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="shurjopay_sandbox_client_secret" class="label-title mt-3">{{__('Shurjopay Sandbox Password')}}</label>
+                                                            <input type="text" name="shurjopay_sandbox_password" class="form-control" value="{{get_static_option('shurjopay_sandbox_password')}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="shurjopay_sandbox_app_id" class="label-title mt-3">{{__('Shurjopay Sandbox Order Prefix')}}</label>
+                                                            <input type="text" name="shurjopay_sandbox_order_prefix" class="form-control" value="{{get_static_option('shurjopay_sandbox_order_prefix')}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="shurjopay_live_username" class="label-title mt-3">{{__('Shurjopay Live Username')}}</label>
+                                                            <input type="text" name="shurjopay_live_username" class="form-control" value="{{get_static_option('shurjopay_live_username')}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="shurjopay_live_password" class="label-title mt-3">{{__('Shurjopay Live Password')}}</label>
+                                                            <input type="text" name="shurjopay_live_password" class="form-control" value="{{get_static_option('shurjopay_live_password')}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="shurjopay_live_order_prefix" class="label-title mt-3">{{__('Shurjopay Live Order Prefix')}}</label>
+                                                            <input type="text" name="shurjopay_live_order_prefix" class="form-control" value="{{get_static_option('shurjopay_live_order_prefix')}}">
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -110,17 +108,13 @@
                                         <div class="card">
                                             <div class="card-header" id="paypal_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#paypal_settings_content"
-                                                            aria-expanded="false">
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#paypal_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Paypal Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="paypal_settings_content" class="collapse show"
-                                                 data-parent="#accordion-payment">
+                                            <div id="paypal_settings_content" class="collapse show" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="payment-notice alert alert-warning">
                                                         <p>{{__('Notice: If PayPal does not support your currency, it will convert the value of your currency to USD based on the current exchange rate of your currency.')}}</p>
@@ -140,39 +134,27 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="paypal_sandbox_client_id" class="label-title mt-3">{{__('Paypal Sandbox Client ID')}}</label>
-                                                        <input type="text" name="paypal_sandbox_client_id"
-                                                               class="form-control"
-                                                               value="{{get_static_option('paypal_sandbox_client_id')}}">
+                                                        <input type="text" name="paypal_sandbox_client_id" class="form-control" value="{{get_static_option('paypal_sandbox_client_id')}}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="paypal_sandbox_client_secret" class="label-title mt-3">{{__('Paypal Sandbox Client Secret')}}</label>
-                                                        <input type="text" name="paypal_sandbox_client_secret"
-                                                               class="form-control"
-                                                               value="{{get_static_option('paypal_sandbox_client_secret')}}">
+                                                        <input type="text" name="paypal_sandbox_client_secret" class="form-control" value="{{get_static_option('paypal_sandbox_client_secret')}}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="paypal_sandbox_app_id" class="label-title mt-3">{{__('Paypal Sandbox App ID')}}</label>
-                                                        <input type="text" name="paypal_sandbox_app_id"
-                                                               class="form-control"
-                                                               value="{{get_static_option('paypal_sandbox_app_id')}}">
+                                                        <input type="text" name="paypal_sandbox_app_id" class="form-control" value="{{get_static_option('paypal_sandbox_app_id')}}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="paypal_live_client_id" class="label-title mt-3">{{__('Paypal Live Client ID')}}</label>
-                                                        <input type="text" name="paypal_live_client_id"
-                                                               class="form-control"
-                                                               value="{{get_static_option('paypal_live_client_id')}}">
+                                                        <input type="text" name="paypal_live_client_id" class="form-control" value="{{get_static_option('paypal_live_client_id')}}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="paypal_live_client_secret" class="label-title mt-3">{{__('Paypal Live Client Secret')}}</label>
-                                                        <input type="text" name="paypal_live_client_secret"
-                                                               class="form-control"
-                                                               value="{{get_static_option('paypal_live_client_secret')}}">
+                                                        <input type="text" name="paypal_live_client_secret" class="form-control" value="{{get_static_option('paypal_live_client_secret')}}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="paypal_live_app_id" class="label-title mt-3">{{__('Paypal Live App ID')}}</label>
-                                                        <input type="text" name="paypal_live_app_id"
-                                                               class="form-control"
-                                                               value="{{get_static_option('paypal_live_app_id')}}">
+                                                        <input type="text" name="paypal_live_app_id" class="form-control" value="{{get_static_option('paypal_live_app_id')}}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -181,20 +163,16 @@
                                         <div class="card">
                                             <div class="card-header" id="paytm_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#paytm_settings_content"
-                                                            aria-expanded="false">
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#paytm_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Paytm Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="paytm_settings_content" class="collapse"
-                                                 data-parent="#accordion-payment">
+                                            <div id="paytm_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="single-input">
                                                         <div class="payment-notice alert alert-warning">
-{{--                                                            <p>{{__("Available Currency For Paytm is")}} {{implode(',',\Xgenious\Paymentgateway\Facades\XgPaymentGateway::paytm()->supported_currency_list())}}</p>--}}
+                                                            {{--                                                            <p>{{__("Available Currency For Paytm is")}} {{implode(',',\Xgenious\Paymentgateway\Facades\XgPaymentGateway::paytm()->supported_currency_list())}}</p>--}}
                                                             <p>{{__('if your currency is not available in paytm, it will convert you currency value to INR value based on your currency exchange rate.')}}</p>
                                                         </div>
                                                     </div>
@@ -219,11 +197,11 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="paytm_merchant_mid" class="label-title mt-3">{{__('Paytm Merchant ID')}}</label>
-                                                        <input type="text" name="paytm_merchant_mid" id="paytm_merchant_mid"  value="{{get_static_option('paytm_merchant_mid')}}" class="form-control">
+                                                        <input type="text" name="paytm_merchant_mid" id="paytm_merchant_mid" value="{{get_static_option('paytm_merchant_mid')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="paytm_merchant_website" class="label-title mt-3">{{__('Paytm Merchant Website')}}</label>
-                                                        <input type="text" name="paytm_merchant_website" id="paytm_merchant_website"  value="{{get_static_option('paytm_merchant_website')}}" class="form-control">
+                                                        <input type="text" name="paytm_merchant_website" id="paytm_merchant_website" value="{{get_static_option('paytm_merchant_website')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="paytm_channel" class="label-title mt-3">{{__('Paytm channel')}}</label>
@@ -240,15 +218,14 @@
                                         <div class="card">
                                             <div class="card-header" id="stripe_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#stripe_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#stripe_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Stripe Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="stripe_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="stripe_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
-                                                    <div class="payment-notice alert alert-warning">
-                                                    </div>
+                                                    <div class="payment-notice alert alert-warning"></div>
                                                     <div class="switch">
                                                         <label class="label-title mt-3"><strong>{{__('Enable/Disable Stripe')}}</strong></label>
                                                         <input class="custom-switch" type="checkbox" id="stripe_gateway" name="stripe_gateway" @if(!empty(get_static_option('stripe_gateway'))) checked @endif>
@@ -268,7 +245,7 @@
                                                     </div>
                                                     <div class="single-input mt-3">
                                                         <label for="stripe_secret_key" class="label-title mt-3">{{__('Stripe Secret')}}</label>
-                                                        <input type="text" name="stripe_secret_key" id="stripe_secret_key"  value="{{get_static_option('stripe_secret_key')}}" class="form-control">
+                                                        <input type="text" name="stripe_secret_key" id="stripe_secret_key" value="{{get_static_option('stripe_secret_key')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -277,12 +254,12 @@
                                         <div class="card">
                                             <div class="card-header" id="razorpay_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#razorpay_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#razorpay_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Razorpay Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="razorpay_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="razorpay_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="payment-notice alert alert-warning">
                                                         <p>{{__("Available Currency For Razorpay is, ['INR']")}}</p>
@@ -307,7 +284,7 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="razorpay_api_secret" class="label-title mt-3">{{__('Razorpay Secret')}}</label>
-                                                        <input type="text" name="razorpay_api_secret" id="razorpay_api_secret"  value="{{get_static_option('razorpay_api_secret')}}" class="form-control">
+                                                        <input type="text" name="razorpay_api_secret" id="razorpay_api_secret" value="{{get_static_option('razorpay_api_secret')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -316,12 +293,12 @@
                                         <div class="card">
                                             <div class="card-header" id="paystack_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#paystack_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#paystack_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('PayStack Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="paystack_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="paystack_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="payment-notice alert alert-warning">
                                                         <p>{{__('if your currency is not available in Paystack, it will convert you currency value to NGN value based on your currency exchange rate.')}}</p>
@@ -350,11 +327,11 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="paystack_secret_key" class="label-title mt-3">{{__('PayStack Secret Key')}}</label>
-                                                        <input type="text" name="paystack_secret_key" id="paystack_secret_key"  value="{{get_static_option('paystack_secret_key')}}" class="form-control">
+                                                        <input type="text" name="paystack_secret_key" id="paystack_secret_key" value="{{get_static_option('paystack_secret_key')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="paystack_merchant_email" class="label-title mt-3">{{__('PayStack Merchant Email')}}</label>
-                                                        <input type="text" name="paystack_merchant_email" id="paystack_merchant_email"  value="{{get_static_option('paystack_merchant_email')}}" class="form-control">
+                                                        <input type="text" name="paystack_merchant_email" id="paystack_merchant_email" value="{{get_static_option('paystack_merchant_email')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -363,15 +340,15 @@
                                         <div class="card">
                                             <div class="card-header" id="mollie_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#mollie_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#mollie_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Mollie Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="mollie_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="mollie_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="payment-notice alert alert-warning">
-{{--                                                        <p>{{__("Available Currency For Mollie is")}} {{implode(',',\Xgenious\Paymentgateway\Facades\XgPaymentGateway::mollie()->supported_currency_list())}}</p>--}}
+                                                        {{--                                                        <p>{{__("Available Currency For Mollie is")}} {{implode(',',\Xgenious\Paymentgateway\Facades\XgPaymentGateway::mollie()->supported_currency_list())}}</p>--}}
                                                         <p>{{__('if your currency is not available in mollie, it will convert you currency value to USD value based on your currency exchange rate.')}}</p>
                                                     </div>
                                                     <div class="switch">
@@ -398,15 +375,15 @@
                                         <div class="card">
                                             <div class="card-header" id="flluterwave_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#flutterwave_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#flutterwave_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Flutterwave Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="flutterwave_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="flutterwave_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="payment-notice alert alert-warning">
-{{--                                                        <p>{{__("Available Currency For Flutterwave is")}} {{implode(',',\Xgenious\Paymentgateway\Facades\XgPaymentGateway::flutterwave()->supported_currency_list())}}</p>--}}
+                                                        {{--                                                        <p>{{__("Available Currency For Flutterwave is")}} {{implode(',',\Xgenious\Paymentgateway\Facades\XgPaymentGateway::flutterwave()->supported_currency_list())}}</p>--}}
                                                         <p>{{__('if your currency is not available in flutterwave, it will convert you currency value to USD value based on your currency exchange rate.')}}</p>
                                                     </div>
                                                     <div class="switch">
@@ -441,12 +418,12 @@
                                         <div class="card">
                                             <div class="card-header" id="midtrans_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#midtrans_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#midtrans_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('MIdtranse Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="midtrans_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="midtrans_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -482,12 +459,12 @@
                                         <div class="card">
                                             <div class="card-header" id="payfast_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#payfast_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#payfast_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Payfast Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="payfast_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="payfast_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -528,12 +505,12 @@
                                         <div class="card">
                                             <div class="card-header" id="cashfree_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#cashfree_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#cashfree_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Cashfree Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="cashfree_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="cashfree_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="switch">
                                                         <label class="label-title mt-3"><strong>{{__('Enable/Disable Cashfree')}}</strong></label>
@@ -563,12 +540,12 @@
                                         <div class="card">
                                             <div class="card-header" id="instamojo_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#instamojo_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#instamojo_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Instamojo Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
-                                            <div id="instamojo_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="instamojo_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="switch">
                                                         <label class="label-title mt-3"><strong>{{__('Enable/Disable Instamojo')}}</strong></label>
@@ -607,13 +584,13 @@
                                         <div class="card">
                                             <div class="card-header" id="marcado_pago_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#marcado_pago_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#marcado_pago_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Marcado Pago Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="marcado_pago_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="marcado_pago_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="switch">
                                                         <label class="label-title mt-3"><strong>{{__('Enable/Disable Marcado Pago')}}</strong></label>
@@ -652,13 +629,13 @@
                                         <div class="card">
                                             <div class="card-header" id="squareup_pago_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#squareup_pago_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#squareup_pago_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Squareup Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="squareup_pago_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="squareup_pago_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="switch">
                                                         <label class="label-title mt-3"><strong>{{__('Enable/Disable Squareup')}}</strong></label>
@@ -675,7 +652,7 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="squareup_access_token" class="label-title mt-3">{{__('Squareup Access Token')}}</label>
-                                                        <input type="text" name="squareup_access_token"  value="{{get_static_option('squareup_access_token')}}" class="form-control">
+                                                        <input type="text" name="squareup_access_token" value="{{get_static_option('squareup_access_token')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="squareup_location_id" class="label-title mt-3">{{__('Squareup Location ID')}}</label>
@@ -694,13 +671,13 @@
                                         <div class="card">
                                             <div class="card-header" id="cinetpay_pago_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#cinetpay_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#cinetpay_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Cinetpay Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="cinetpay_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="cinetpay_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
                                                     <div class="switch">
                                                         <label class="label-title mt-3"><strong>{{__('Enable/Disable Cinetpay')}}</strong></label>
@@ -717,7 +694,7 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="cinetpay_app_key" class="label-title mt-3">{{__('Cinetpay App Key')}}</label>
-                                                        <input type="text" name="cinetpay_app_key"  value="{{get_static_option('cinetpay_app_key')}}" class="form-control">
+                                                        <input type="text" name="cinetpay_app_key" value="{{get_static_option('cinetpay_app_key')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="cinetpay_site_id" class="label-title mt-3">{{__('Cinetpay Site ID')}}</label>
@@ -732,13 +709,13 @@
                                         <div class="card">
                                             <div class="card-header" id="paytabs_pago_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#paytabs_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#paytabs_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Paytabs Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="paytabs_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="paytabs_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -757,7 +734,7 @@
 
                                                     <div class="single-input">
                                                         <label for="paytabs_server_key" class="label-title mt-3">{{__('Paytabs Server Key')}}</label>
-                                                        <input type="text" name="paytabs_server_key"  value="{{get_static_option('paytabs_server_key')}}" class="form-control">
+                                                        <input type="text" name="paytabs_server_key" value="{{get_static_option('paytabs_server_key')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="paytabs_profile_id" class="label-title mt-3">{{__('Paytabs Profile ID')}}</label>
@@ -784,13 +761,13 @@
                                         <div class="card">
                                             <div class="card-header" id="billplz_pago_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#billplz_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#billplz_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('BillPlz Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="billplz_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="billplz_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -808,7 +785,7 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="billplz_key" class="label-title mt-3">{{__('BillPlz Key')}}</label>
-                                                        <input type="text" name="billplz_key"  value="{{get_static_option('billplz_key')}}" class="form-control">
+                                                        <input type="text" name="billplz_key" value="{{get_static_option('billplz_key')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="billplz_xsignature" class="label-title mt-3">{{__('BillPlz xSignature')}}</label>
@@ -827,13 +804,13 @@
                                         <div class="card">
                                             <div class="card-header" id="zitopay_pago_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#zitopay_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#zitopay_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Zitopay Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="zitopay_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="zitopay_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -851,7 +828,7 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="zitopay_username" class="label-title mt-3">{{__('Zitopay Username')}}</label>
-                                                        <input type="text" name="zitopay_username"  value="{{get_static_option('zitopay_username')}}" class="form-control">
+                                                        <input type="text" name="zitopay_username" value="{{get_static_option('zitopay_username')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -862,13 +839,13 @@
                                         <div class="card">
                                             <div class="card-header" id="toyyibpay_pago_content">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#toyyibpay_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#toyyibpay_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Toyyibpay Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="toyyibpay_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="toyyibpay_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -886,11 +863,11 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="toyyibpay_secrect_key" class="label-title mt-3">{{__('Toyyibpay Secrect Key')}}</label>
-                                                        <input type="text" name="toyyibpay_secrect_key"  value="{{get_static_option('toyyibpay_secrect_key')}}" class="form-control">
+                                                        <input type="text" name="toyyibpay_secrect_key" value="{{get_static_option('toyyibpay_secrect_key')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="toyyibpay_secrect_key" class="label-title mt-3">{{__('Toyyibpay Category Code')}}</label>
-                                                        <input type="text" name="toyyibpay_category_code"  value="{{get_static_option('toyyibpay_category_code')}}" class="form-control">
+                                                        <input type="text" name="toyyibpay_category_code" value="{{get_static_option('toyyibpay_category_code')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -901,13 +878,13 @@
                                         <div class="card">
                                             <div class="card-header" id="pagali_pago_content">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#pagali_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#pagali_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Pagali Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="pagali_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="pagali_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -925,11 +902,11 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="pagali_page_id" class="label-title mt-3">{{__('Pagali Page ID')}}</label>
-                                                        <input type="text" name="pagali_page_id"  value="{{get_static_option('pagali_page_id')}}" class="form-control">
+                                                        <input type="text" name="pagali_page_id" value="{{get_static_option('pagali_page_id')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="pagali_entity_id" class="label-title mt-3">{{__('Pagali Entity ID')}}</label>
-                                                        <input type="text" name="pagali_entity_id"  value="{{get_static_option('pagali_entity_id')}}" class="form-control">
+                                                        <input type="text" name="pagali_entity_id" value="{{get_static_option('pagali_entity_id')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -940,13 +917,13 @@
                                         <div class="card">
                                             <div class="card-header" id="authorize_dot_net_pago_content">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#authorize_dot_net_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#authorize_dot_net_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Authorize.Net Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="authorize_dot_net_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="authorize_dot_net_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -964,11 +941,11 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="pagali_page_id" class="label-title mt-3">{{__('Authorize.Net Login ID')}}</label>
-                                                        <input type="text" name="authorize_dot_net_login_id"  value="{{get_static_option('authorize_dot_net_login_id')}}" class="form-control">
+                                                        <input type="text" name="authorize_dot_net_login_id" value="{{get_static_option('authorize_dot_net_login_id')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="pagali_entity_id" class="label-title mt-3">{{__('Authorize.Net Transaction ID')}}</label>
-                                                        <input type="text" name="authorize_dot_net_transaction_id"  value="{{get_static_option('authorize_dot_net_transaction_id')}}" class="form-control">
+                                                        <input type="text" name="authorize_dot_net_transaction_id" value="{{get_static_option('authorize_dot_net_transaction_id')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -979,13 +956,13 @@
                                         <div class="card">
                                             <div class="card-header" id="authorize_dot_net_pago_content">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#sitesway_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#sitesway_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('SitesWay Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="sitesway_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="sitesway_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -1003,11 +980,11 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="sitesway_brand_id" class="label-title mt-3">{{__('SitesWay Brand ID')}}</label>
-                                                        <input type="text" name="sitesway_brand_id"  value="{{get_static_option('sitesway_brand_id')}}" class="form-control">
+                                                        <input type="text" name="sitesway_brand_id" value="{{get_static_option('sitesway_brand_id')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="sitesway_api_key" class="label-title mt-3">{{__('SitesWay API Key')}}</label>
-                                                        <input type="text" name="sitesway_api_key"  value="{{get_static_option('sitesway_api_key')}}" class="form-control">
+                                                        <input type="text" name="sitesway_api_key" value="{{get_static_option('sitesway_api_key')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1018,13 +995,13 @@
                                         <div class="card">
                                             <div class="card-header" id="iyzipay_pago_content">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#iyzipay_settings_content" aria-expanded="false" >
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#iyzipay_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Iyzipay Settings')}}</span>
                                                     </button>
                                                 </h5>
                                             </div>
 
-                                            <div id="iyzipay_settings_content" class="collapse"  data-parent="#accordion-payment">
+                                            <div id="iyzipay_settings_content" class="collapse" data-parent="#accordion-payment">
                                                 <div class="card-body">
 
                                                     <div class="switch">
@@ -1042,11 +1019,11 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="iyzipay_secret_key" class="label-title mt-3">{{__('Iyzipay secret Key')}}</label>
-                                                        <input type="text" name="iyzipay_secret_key"  value="{{get_static_option('iyzipay_secret_key')}}" class="form-control">
+                                                        <input type="text" name="iyzipay_secret_key" value="{{get_static_option('iyzipay_secret_key')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="iyzipay_api_key" class="label-title mt-3">{{__('Iyzipay API Key')}}</label>
-                                                        <input type="text" name="iyzipay_api_key"  value="{{get_static_option('iyzipay_api_key')}}" class="form-control">
+                                                        <input type="text" name="iyzipay_api_key" value="{{get_static_option('iyzipay_api_key')}}" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1057,10 +1034,7 @@
                                         <div class="card">
                                             <div class="card-header" id="manual_payment_settings">
                                                 <h5 class="mb-0">
-                                                    <button class="btn btn-link" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#manual_payment_settings_content"
-                                                            aria-expanded="false">
+                                                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#manual_payment_settings_content" aria-expanded="false">
                                                         <span class="page-title"> {{__('Manual Payment Settings')}}</span>
                                                     </button>
                                                 </h5>
@@ -1077,15 +1051,12 @@
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="manual_payment_gateway_name" class="label-title mt-3">{{__('Manual Payment Name')}}</label>
-                                                        <input type="text" name="manual_payment_gateway_name"
-                                                               id="manual_payment_gateway_name"
-                                                               value="{{get_static_option('manual_payment_gateway_name')}}"
-                                                               class="form-control">
+                                                        <input type="text" name="manual_payment_gateway_name" id="manual_payment_gateway_name" value="{{get_static_option('manual_payment_gateway_name')}}" class="form-control">
                                                     </div>
                                                     <div class="single-input">
                                                         <label for="site_manual_payment_description" class="label-title mt-3">{{__('Manual Payment Description')}}</label>
                                                         <div class="summernote-wrapper">
-                                                           <textarea class="summernote form-control" name="site_manual_payment_description" id="site_manual_payment_description">{{get_static_option('site_manual_payment_description')}}</textarea>
+                                                            <textarea class="summernote form-control" name="site_manual_payment_description" id="site_manual_payment_description">{{get_static_option('site_manual_payment_description')}}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1096,7 +1067,7 @@
                                     </div>
                                 </div>
                                 @can('payment-gateway-settings')
-                                <button type="submit" id="update" class="btn btn-primary mt-4 pr-4 pl-4">{{__('Update Changes')}}</button>
+                                    <button type="submit" id="update" class="btn btn-primary mt-4 pr-4 pl-4">{{__('Update Changes')}}</button>
                                 @endcan
                             </form>
 
@@ -1111,9 +1082,9 @@
 
 @section('script')
     <x-media.js/>
-     <x-summernote.summernote-js />
+    <x-summernote.summernote-js/>
     <script>
-        (function($){
+        (function ($) {
             "use strict";
             $(document).ready(function () {
                 $('#site_manual_payment_description').summernote();

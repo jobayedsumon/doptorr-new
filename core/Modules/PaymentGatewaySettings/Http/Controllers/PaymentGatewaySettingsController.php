@@ -56,6 +56,7 @@ class PaymentGatewaySettingsController extends Controller
                 'shurjopay_live_password' => 'nullable|string|max:191',
                 'shurjopay_gateway' => 'nullable|string|max:191',
                 'shurjopay_test_mode' => 'nullable|string|max:191',
+                'shurjopay_enable_worldwide' => 'nullable|string|max:191',
                 // paypal
                 'paypal_preview_logo' => 'required|string|max:191',
                 'paypal_sandbox_client_id' => 'nullable|string|max:191',

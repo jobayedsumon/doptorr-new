@@ -42,6 +42,21 @@ class PaymentGatewayList
         return $output;
     }
 
+    public static function isIpFromBangladeshOrLocal(): bool
+    {
+        $ip = request()->ip();
+
+        if (in_array($ip, ['127.0.0.1', 'localhost'])) {
+            return true;
+        }
+
+        $url = "http://ip-api.com/json/{$ip}";
+        $json = file_get_contents($url);
+        $data = json_decode($json, true);
+
+        return isset($data['countryCode']) && $data['countryCode'] === 'BD';
+    }
+
     public static function renderPaymentGatewayForForm($cash_on_delivery_show = true)
     {
         $output = '<div class="payment-gateway-wrapper payment_getway_image">';
@@ -59,6 +74,9 @@ class PaymentGatewayList
         }
         foreach ($all_gateway as $gateway) {
             if (! empty(get_static_option($gateway.'_gateway'))) {
+                if ($gateway === 'shurjopay' && empty(get_static_option('shurjopay_enable_worldwide')) && !PaymentGatewayList::isIpFromBangladeshOrLocal()) {
+                    continue;
+                }
                 $class = (get_static_option('site_default_payment_gateway') == $gateway) ? 'class="selected active"' : '';
 
                 $output .= '<li data-gateway="'.$gateway.'" '.$class.'><div class="img-select">';
