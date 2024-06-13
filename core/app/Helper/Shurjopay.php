@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use Illuminate\Http\Request;
 use ShurjopayPlugin\PaymentRequest;
 use ShurjopayPlugin\ShurjopayConfig;
 use ShurjopayPlugin\ShurjopayException;
