@@ -1,0 +1,2 @@
+<link rel="stylesheet" href="<?php echo e(asset('assets/common/css/jquery.dataTables.min.css')); ?>">
+<?php /**PATH /home/doptorr/public_html/core/resources/views/components/data-table/data-table-css.blade.php ENDPATH**/ ?>

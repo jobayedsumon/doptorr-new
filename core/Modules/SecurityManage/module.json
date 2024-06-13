@@ -1,0 +1,43 @@
+{
+    "name": "SecurityManage",
+    "alias": "securitymanage",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SecurityManage\\Providers\\SecurityManageServiceProvider"
+    ],
+    "files": [],
+    "xilancerMetaData": {
+        "plugin_type": "external",
+        "admin_settings": {
+            "menu_item": [
+                {
+                    "id" : "security-manage-menu",
+                    "label": "Security Manage",
+                    "route": "admin.word.all",
+                    "parent": null,
+                    "icon": "fa-solid fa-lock",
+                    "permissions": "word-settings-menu",
+                    "class": "bg-danger"
+                },
+                {
+                    "id" : "word-settings-menu",
+                    "label": "Restricted Words",
+                    "route": "admin.word.all",
+                    "parent": "security-manage-menu",
+                    "permissions": "word-settings-menu",
+                    "class": "bg-danger"
+                },
+                {
+                    "id" : "log-history-menu",
+                    "label": "Log History",
+                    "route": "admin.log.all",
+                    "parent": "security-manage-menu",
+                    "permissions": "log-history-menu",
+                    "class": "bg-danger"
+                }
+            ]
+        }
+    }
+}

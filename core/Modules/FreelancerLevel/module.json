@@ -1,0 +1,46 @@
+{
+    "name": "FreelancerLevel",
+    "alias": "freelancerlevel",
+    "description": "Freelancer Level is a External Plugin developed by External Developer to enhance platform features",
+    "version": "1.0.0",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\FreelancerLevel\\Providers\\FreelancerLevelServiceProvider"
+    ],
+    "files": [],
+    "xilancerMetaData": {
+        "plugin_type": "external",
+        "admin_settings": {
+            "menu_item": [
+                {
+                    "id" : "freelancer-level-menu",
+                    "label": "Freelancer Level",
+                    "route": "admin.level.all",
+                    "parent": null,
+                    "icon": "fa-solid fa-certificate",
+                    "permissions": "freelancer-level-menu",
+                    "class": "bg-danger"
+                },
+                {
+                    "id" : "freelancer-level-menu-settings",
+                    "label": "Freelancer Level Settings",
+                    "route": "admin.level.all",
+                    "parent":"freelancer-level-menu",
+                    "icon": "fa-solid fa-certificate",
+                    "permissions": "freelancer-level-menu-settings",
+                    "class": "bg-danger"
+                },
+                {
+                    "id" : "freelancer-level-badge-settings",
+                    "label": "Profile Page Badge Settings",
+                    "route": "admin.profile.page.badge",
+                    "parent":"freelancer-level-menu",
+                    "icon": "fa-solid fa-certificate",
+                    "permissions": "freelancer-level-badge-settings",
+                    "class": "bg-danger"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,2 @@
+<button type="submit" class="<?php echo e($class ?? ''); ?>"><?php echo e($title ?? ''); ?></button>
+<?php /**PATH /home/doptorr/public_html/core/resources/views/components/btn/submit.blade.php ENDPATH**/ ?>
