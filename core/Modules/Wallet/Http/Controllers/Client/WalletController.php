@@ -65,6 +65,7 @@ class WalletController extends Controller
         $user = Auth::guard('web')->user();
         $user_id = $user->id;
         session()->put('user_id',$user_id);
+        \Illuminate\Support\Facades\Session::save();
         $total = $request->amount;
         $name = $user->first_name.' '.$user->last_name;
         $email = $user->email;

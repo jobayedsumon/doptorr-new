@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Modules\Chat\Entities\Offer;
 use Modules\Wallet\Entities\Wallet;
 
@@ -282,6 +283,7 @@ class OrderService
         session()->put('freelancer_id',$freelancer_id);
         session()->put('project_or_job',$project_or_job);
         session()->put('proposal_id',$request->proposal_id_for_order);
+        Session::save();
         $description = sprintf(__('Order id #%1$d Email: %2$s, Name: %3$s'),$last_order_id,$email,$name);
 
         if ($request->selected_payment_gateway === 'shurjopay') {

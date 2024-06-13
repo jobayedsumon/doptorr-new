@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Modules\PromoteFreelancer\Entities\ProjectPromoteSettings;
 use Modules\PromoteFreelancer\Entities\PromotionProjectList;
 use Modules\Subscription\Entities\Subscription;
@@ -53,7 +54,7 @@ class BuyPromotePackageController extends Controller
                 $type = $request->set_project_id_for_promote == 0 ? 'profile' : 'project';
                 session()->put('user_id',$user->id);
                 session()->put('user_type',$user_type);
-
+                Session::save();
 
                 if($request->selected_payment_gateway === 'manual_payment')
                 {

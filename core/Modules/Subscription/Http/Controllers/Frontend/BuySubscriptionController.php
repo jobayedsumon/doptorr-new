@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Modules\Subscription\Entities\Subscription;
 use Modules\Subscription\Entities\UserSubscription;
 use Modules\Wallet\Entities\Wallet;
@@ -43,7 +44,7 @@ class BuySubscriptionController extends Controller
                 $status = $request->selected_payment_gateway === 'wallet' ? 1 : 0;
                 session()->put('user_id',$user->id);
                 session()->put('user_type',$user_type);
-
+                Session::save();
 
                 if($request->selected_payment_gateway === 'manual_payment')
                 {
