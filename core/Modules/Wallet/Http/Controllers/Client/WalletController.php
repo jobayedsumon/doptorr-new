@@ -125,7 +125,15 @@ class WalletController extends Controller
             return back();
 
         }else{
-            if ($request->selected_payment_gateway === 'paypal') {
+            if ($request->selected_payment_gateway === 'shurjopay') {
+                try {
+                    return PaymentGatewayRequestHelper::shurjopay()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_deposit_id,$email,$name,route('client.shurjopay.ipn.wallet')));
+                }catch (\Exception $e){
+                    toastr_error($e->getMessage());
+                    return back();
+                }
+            }
+            elseif ($request->selected_payment_gateway === 'paypal') {
                 try {
                     return PaymentGatewayRequestHelper::paypal()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_deposit_id,$email,$name,route('client.paypal.ipn.wallet')));
                 }catch (\Exception $e){

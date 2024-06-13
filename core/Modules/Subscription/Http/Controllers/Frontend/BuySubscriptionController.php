@@ -119,7 +119,15 @@ class BuySubscriptionController extends Controller
                     $last_subscription_id = $buy_subscription->id;
                     $description = sprintf(__('Order id #%1$d Email: %2$s, Name: %3$s'),$last_subscription_id,$email,$name);
 
-                    if ($request->selected_payment_gateway === 'paypal') {
+                    if ($request->selected_payment_gateway === 'shurjopay') {
+                        try {
+                            return PaymentGatewayRequestHelper::shurjopay()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_subscription_id,$email,$name,$user_type,route('bs.shurjopay.ipn.subscription')));
+                        }catch (\Exception $e){
+                            toastr_error($e->getMessage());
+                            return back();
+                        }
+                    }
+                    elseif ($request->selected_payment_gateway === 'paypal') {
                         try {
                             return PaymentGatewayRequestHelper::paypal()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_subscription_id,$email,$name,$user_type,route('bs.paypal.ipn.subscription')));
                         }catch (\Exception $e){

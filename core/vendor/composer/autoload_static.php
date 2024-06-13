@@ -136,6 +136,7 @@ class ComposerStaticInitef07bdb9c41ad5746b95ea6c65ca3206
             'Spatie\\Ignition\\' => 16,
             'Spatie\\FlareClient\\' => 19,
             'Spatie\\Backtrace\\' => 17,
+            'ShurjopayPlugin\\' => 16,
             'Sabberworm\\CSS\\' => 15,
         ),
         'R' => 
@@ -534,6 +535,10 @@ class ComposerStaticInitef07bdb9c41ad5746b95ea6c65ca3206
         'Spatie\\Backtrace\\' => 
         array (
             0 => __DIR__ . '/..' . '/spatie/backtrace/src',
+        ),
+        'ShurjopayPlugin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/shurjomukhi/shurjopay-plugin-php/src',
         ),
         'Sabberworm\\CSS\\' => 
         array (
@@ -7813,6 +7818,12 @@ class ComposerStaticInitef07bdb9c41ad5746b95ea6c65ca3206
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/type/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/type/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'ShurjopayPlugin\\PaymentRequest' => __DIR__ . '/..' . '/shurjomukhi/shurjopay-plugin-php/src/PaymentRequest.php',
+        'ShurjopayPlugin\\Shurjopay' => __DIR__ . '/..' . '/shurjomukhi/shurjopay-plugin-php/src/Shurjopay.php',
+        'ShurjopayPlugin\\ShurjopayConfig' => __DIR__ . '/..' . '/shurjomukhi/shurjopay-plugin-php/src/ShurjopayConfig.php',
+        'ShurjopayPlugin\\ShurjopayEnvReader' => __DIR__ . '/..' . '/shurjomukhi/shurjopay-plugin-php/src/ShurjopayEnvReader.php',
+        'ShurjopayPlugin\\ShurjopayException' => __DIR__ . '/..' . '/shurjomukhi/shurjopay-plugin-php/src/ShurjopayException.php',
+        'ShurjopayPlugin\\ShurjopayValidation' => __DIR__ . '/..' . '/shurjomukhi/shurjopay-plugin-php/src/ShurjopayValidation.php',
         'Spatie\\Backtrace\\Arguments\\ArgumentReducers' => __DIR__ . '/..' . '/spatie/backtrace/src/Arguments/ArgumentReducers.php',
         'Spatie\\Backtrace\\Arguments\\ProvidedArgument' => __DIR__ . '/..' . '/spatie/backtrace/src/Arguments/ProvidedArgument.php',
         'Spatie\\Backtrace\\Arguments\\ReduceArgumentPayloadAction' => __DIR__ . '/..' . '/spatie/backtrace/src/Arguments/ReduceArgumentPayloadAction.php',

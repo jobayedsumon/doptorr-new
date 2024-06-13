@@ -152,6 +152,7 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
     //order ipns
     Route::group(['prefix' => 'order','as'=>'pro.'],function(){
         Route::controller(OrderIPNController::class)->group(function () {
+            Route::get('shurjopay-ipn','shurjopay_ipn_for_order')->name('shurjopay.ipn.order');
             Route::get('paypal-ipn','paypal_ipn_for_order')->name('paypal.ipn.order');
             Route::post('paytm-ipn','paytm_ipn_for_order')->name('paytm.ipn.order');
 //            Route::get('paystack-ipn','paystack_ipn_for_order')->name('paystack.ipn.order');

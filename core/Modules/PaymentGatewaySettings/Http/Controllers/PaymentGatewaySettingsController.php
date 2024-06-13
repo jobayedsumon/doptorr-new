@@ -25,6 +25,7 @@ class PaymentGatewaySettingsController extends Controller
             $field_rules['site_' . strtolower($global_currency) . '_to_zar_exchange_rate'] = 0;
             $field_rules['site_' . strtolower($global_currency) . '_to_brl_exchange_rate'] = 0;
             $field_rules['site_' . strtolower($global_currency) . '_to_myr_exchange_rate'] = 0;
+            $field_rules['site_' . strtolower($global_currency) . '_to_bdt_exchange_rate'] = 0;
 
             foreach ($field_rules as $item => $rule) {
                 update_static_option($item, $request->$item);

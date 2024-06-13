@@ -145,6 +145,16 @@
                                     </div>
                                 @endif
 
+                                @if($global_currency != 'BDT')
+                                    <div class="single-input">
+                                        <label for="site_{{strtolower($global_currency)}}_to_bdt_exchange_rate" class="label-title mt-3">{{__($global_currency.' to BDT Exchange Rate')}}</label>
+                                        <input type="text" class="form-control"
+                                               name="site_{{strtolower($global_currency)}}_to_bdt_exchange_rate"
+                                               value="{{get_static_option('site_'.$global_currency.'_to_bdt_exchange_rate')}}">
+                                        <span class="info-text">{{__('enter '.$global_currency.' to BDT exchange rate. eg: 1'.$global_currency.' = ? BDT')}}</span>
+                                    </div>
+                                @endif
+
                                 @can('payment-info-settings')
                                 <button type="submit" id="update" class="btn btn-primary mt-4 pr-4 pl-4">{{__('Update Changes')}}</button>
                                 @endcan

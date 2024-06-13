@@ -62,6 +62,7 @@ Route::group(['prefix'=>'freelancer/buy-package','as'=>'freelancer.','middleware
         // ipn routes
         Route::group(['prefix' => 'buy-promote-package','as'=>'bp.'],function(){
             Route::controller(\Modules\PromoteFreelancer\Http\Controllers\Freelancer\BuyPromotePackageIPNController::class)->group(function () {
+            Route::get('shurjopay/ipn','shurjopay_ipn_for_promotion')->name('shurjopay.ipn.package');
             Route::get('paypal/ipn','paypal_ipn_for_promotion')->name('paypal.ipn.package');
             Route::post('paytm/ipn','paytm_ipn_for_promotion')->name('paytm.ipn.package');
             Route::get('paystack/ipn','paystack_ipn_for_promotion')->name('paystack.ipn.package');

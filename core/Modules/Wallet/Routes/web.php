@@ -19,6 +19,7 @@ Route::group(['prefix'=>'client/wallet','as'=>'client.','middleware'=>['auth','u
     });
 
     Route::controller(\Modules\Wallet\Http\Controllers\Client\ClientWalletDepositController::class)->group(function () {
+        Route::get('shurjopay-ipn','shurjopay_ipn_for_wallet')->name('shurjopay.ipn.wallet');
         Route::get('paypal-ipn','paypal_ipn_for_wallet')->name('paypal.ipn.wallet');
         Route::post('paytm-ipn','paytm_ipn_for_wallet')->name('paytm.ipn.wallet');
         Route::get('mollie/ipn','mollie_ipn_for_wallet')->name('mollie.ipn.wallet');
@@ -59,6 +60,7 @@ Route::group(['prefix'=>'freelancer/wallet','as'=>'freelancer.','middleware'=>['
     });
 
     Route::controller(\Modules\Wallet\Http\Controllers\Freelancer\FreelancerWalletDepositController::class)->group(function () {
+        Route::get('shurjopay-ipn','shurjopay_ipn_for_wallet')->name('shurjopay.ipn.wallet');
         Route::get('paypal-ipn','paypal_ipn_for_wallet')->name('paypal.ipn.wallet');
         Route::post('paytm-ipn','paytm_ipn_for_wallet')->name('paytm.ipn.wallet');
 //        Route::get('paystack-ipn','paystack_ipn_for_wallet')->name('paystack.ipn.wallet');

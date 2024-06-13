@@ -55,36 +55,36 @@ class Shurjopay extends XgPaymentGateway
         $payment_request = new PaymentRequest();
 
         $payment_request->currency = 'BDT';
-        $payment_request->amount = $this->currency === 'USD' ? ($data['amount'] * $this->exchangeRate) : $data['amount'];
+        $payment_request->amount = $this->currency === 'BDT' ? $data['amount'] : ($data['amount'] * $this->exchangeRate);
         $payment_request->discountAmount = '0';
         $payment_request->discPercent = '0';
         $payment_request->customerName = $data['name'];
-        $payment_request->customerPhone = '';
+        $payment_request->customerPhone = '01700000000';
         $payment_request->customerEmail = $data['email'];
         $payment_request->customerAddress = 'Dhaka';
         $payment_request->customerCity = 'Dhaka';
         $payment_request->customerState = 'Dhaka';
-        $payment_request->customerPostcode = '';
+        $payment_request->customerPostcode = '1200';
         $payment_request->customerCountry = 'Bangladesh';
         $payment_request->shippingAddress = 'Dhaka';
         $payment_request->shippingCity = 'Dhaka';
         $payment_request->shippingCountry = 'Bangladesh';
         $payment_request->receivedPersonName = $data['name'];
         $payment_request->shippingPhoneNumber = '';
-        $payment_request->value1 = '';
+        $payment_request->value1 = $data['order_id'];
         $payment_request->value2 = '';
         $payment_request->value3 = '';
         $payment_request->value4 = '';
 
-        $shurjopayInstance = new \ShurjopayPlugin\Shurjopay($this->getShurjopayConfig($data['ipn_url']));
-
-        return $shurjopayInstance->makePayment($payment_request);
+        return $this->initializePayment($data['ipn_url'])->makePayment($payment_request);
     }
 
+    /**
+     * @throws ShurjopayException
+     */
     public function verify_payment(Request $request){
         $order_id = $request->order_id;
-        $response=$this->sp_instance->verifyPayment($order_id);
-        print_r($response);exit;
+        return $this->initializePayment('')->verifyPayment($order_id);
     }
 
     private function getShurjopayConfig(string $ipnUrl): ShurjopayConfig
@@ -99,5 +99,10 @@ class Shurjopay extends XgPaymentGateway
         $config->ssl_verifypeer = 1;
 
         return $config;
+    }
+
+    public function initializePayment(string $ipUrl): \ShurjopayPlugin\Shurjopay
+    {
+        return new \ShurjopayPlugin\Shurjopay($this->getShurjopayConfig($ipUrl));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Modules\Wallet\Http\Controllers\Freelancer;
 
+use App\Helper\Shurjopay;
 use App\Mail\BasicMail;
 use App\Models\AdminNotification;
 use App\Models\User;
@@ -11,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
 use Modules\Wallet\Entities\Wallet;
 use Modules\Wallet\Entities\WalletHistory;
+use ShurjopayPlugin\ShurjopayException;
 use Xgenious\Paymentgateway\Facades\XgPaymentGateway;
 
 class FreelancerWalletDepositController extends Controller
@@ -18,6 +20,36 @@ class FreelancerWalletDepositController extends Controller
     protected function cancel_page()
     {
         return redirect()->route('freelancer.wallet.deposit.payment.cancel.static');
+    }
+
+    public function shurjopay_ipn_for_wallet(Request $request)
+    {
+        $shurjopay = new Shurjopay();
+        $shurjopay->setUsername(get_static_option('shurjopay_sandbox_username') ?? get_static_option('shurjopay_live_username')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setPassword(get_static_option('shurjopay_sandbox_password') ?? get_static_option('shurjopay_live_password')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setOrderPrefix(get_static_option('shurjopay_sandbox_order_prefix') ?? get_static_option('shurjopay_live_order_prefix')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setEnv(get_static_option('shurjopay_test_mode') === 'on'); //env must set as boolean, string will not work
+
+        try
+        {
+            $payment_data = $shurjopay->verify_payment($request);
+        }
+        catch (ShurjopayException $exception)
+        {
+            return $this->cancel_page();
+        }
+
+        $payment_data = $payment_data[0];
+
+        if (isset($payment_data->sp_code) && $payment_data->sp_code === '1000' && isset($payment_data->sp_message) && $payment_data->sp_message === 'Success'){
+            $order_id = $payment_data->value1;
+            $user_id = session()->get('user_id');
+            $this->update_database($order_id, $payment_data->order_id);
+            $this->send_deposit_mail($order_id,$user_id);
+            toastr_success('Your wallet credited successfully');
+            return redirect()->route('freelancer.wallet.history');
+        }
+        return $this->cancel_page();
     }
 
     public function paypal_ipn_for_wallet(Request $request)

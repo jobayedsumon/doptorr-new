@@ -90,6 +90,7 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
     // ipn routes
     Route::group(['prefix' => 'buy-subscription','as'=>'bs.'],function(){
         Route::controller(\Modules\Subscription\Http\Controllers\Frontend\BuySubscriptionIPNController::class)->group(function () {
+            Route::get('shurjopay/ipn','shurjopay_ipn_for_subscription')->name('shurjopay.ipn.subscription');
             Route::get('paypal/ipn','paypal_ipn_for_subscription')->name('paypal.ipn.subscription');
             Route::post('paytm/ipn','paytm_ipn_for_subscription')->name('paytm.ipn.subscription');
 //            Route::get('paystack/ipn','paystack_ipn_for_subscription')->name('paystack.ipn.subscription');

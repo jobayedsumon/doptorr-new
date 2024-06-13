@@ -2,6 +2,7 @@
 
 namespace Modules\PromoteFreelancer\Http\Controllers\Freelancer;
 
+use App\Helper\Shurjopay;
 use App\Mail\BasicMail;
 use App\Models\AdminNotification;
 use App\Models\Project;
@@ -12,6 +13,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Mail;
 use Modules\PromoteFreelancer\Entities\PromotionProjectList;
 use Modules\Subscription\Entities\UserSubscription;
+use ShurjopayPlugin\ShurjopayException;
 use Xgenious\Paymentgateway\Facades\XgPaymentGateway;
 
 class BuyPromotePackageIPNController extends Controller
@@ -19,6 +21,37 @@ class BuyPromotePackageIPNController extends Controller
     protected function cancel_page()
     {
         return redirect()->route('freelancer.package.buy.payment.cancel.static');
+    }
+
+    public function shurjopay_ipn_for_promotion(Request $request)
+    {
+        $shurjopay = new Shurjopay();
+        $shurjopay->setUsername(get_static_option('shurjopay_sandbox_username') ?? get_static_option('shurjopay_live_username')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setPassword(get_static_option('shurjopay_sandbox_password') ?? get_static_option('shurjopay_live_password')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setOrderPrefix(get_static_option('shurjopay_sandbox_order_prefix') ?? get_static_option('shurjopay_live_order_prefix')); // provide sandbox id if payment env set to true, otherwise provide live credentials
+        $shurjopay->setEnv(get_static_option('shurjopay_test_mode') === 'on'); //env must set as boolean, string will not work
+
+        try
+        {
+            $payment_data = $shurjopay->verify_payment($request);
+        }
+        catch (ShurjopayException $exception)
+        {
+            return $this->cancel_page();
+        }
+
+        $payment_data = $payment_data[0];
+
+        if (isset($payment_data->sp_code) && $payment_data->sp_code === '1000' && isset($payment_data->sp_message) && $payment_data->sp_message === 'Success'){
+            $order_id = $payment_data->value1;
+            $user_id = session()->get('user_id');
+            $user_type = session()->get('user_type');
+            $this->update_database($order_id, $payment_data->order_id);
+            $this->send_jobs_mail($order_id,$user_id);
+            toastr_success('Promotion package purchase success');
+            return redirect()->route($user_type.'.'.'profile.details',auth()->user()->username);
+        }
+        return $this->cancel_page();
     }
 
     public function paypal_ipn_for_promotion()

@@ -14,7 +14,7 @@ class PaymentGatewayRequestHelper
         $shurjopay->setOrderPrefix(get_static_option('shurjopay_sandbox_order_prefix') ?? get_static_option('shurjopay_live_order_prefix')); // provide sandbox id if payment env set to true, otherwise provide live credentials
         $shurjopay->setCurrency(self::globalCurrency());
         $shurjopay->setEnv(get_static_option('shurjopay_test_mode') === 'on'); //env must set as boolean, string will not work
-        $shurjopay->setExchangeRate(self::usdConversionValue()); // if BDT not set as currency
+        $shurjopay->setExchangeRate(self::bdtConversionValue()); // if BDT not set as currency
 
         return $shurjopay;
     }
@@ -296,5 +296,9 @@ class PaymentGatewayRequestHelper
     private static function myrConversionValue()
     {
         return get_static_option('site_usd_to_myr_exchange_rate');
+    }
+    private static function bdtConversionValue()
+    {
+        return get_static_option('site_usd_to_bdt_exchange_rate');
     }
 }
