@@ -3,12 +3,12 @@
 namespace Modules\PromoteFreelancer\Http\Controllers\Freelancer;
 
 use App\Helper\PaymentGatewayRequestHelper;
+use App\Helper\ShurjopayHelper;
 use App\Mail\BasicMail;
 use App\Models\AdminNotification;
 use App\Models\Project;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Modules\PromoteFreelancer\Entities\ProjectPromoteSettings;
 use Modules\PromoteFreelancer\Entities\PromotionProjectList;
-use Modules\Subscription\Entities\Subscription;
-use Modules\Subscription\Entities\UserSubscription;
 use Modules\Wallet\Entities\Wallet;
 
 class BuyPromotePackageController extends Controller
@@ -165,7 +163,9 @@ class BuyPromotePackageController extends Controller
 
                     if ($request->selected_payment_gateway === 'shurjopay') {
                         try {
-                            return PaymentGatewayRequestHelper::shurjopay()->charge_customer($this->buildPaymentArg($total,$transaction_fee,$title,$description,$last_package_id,$email,$name,$user_type,route('freelancer.bp.shurjopay.ipn.package')));
+                            $ipnUrl    = route('freelancer.bp.shurjopay.ipn.package');
+                            $shurjopay = new ShurjopayHelper($ipnUrl);
+                            return $shurjopay->chargeCustomer($this->buildPaymentArg($total,$transaction_fee,$title,$description,$last_package_id,$email,$name,$user_type,$ipnUrl));
                         }catch (\Exception $e){
                             toastr_error($e->getMessage());
                             return back();

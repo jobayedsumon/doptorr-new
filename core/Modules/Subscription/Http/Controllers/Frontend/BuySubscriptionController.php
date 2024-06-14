@@ -3,6 +3,7 @@
 namespace Modules\Subscription\Http\Controllers\Frontend;
 
 use App\Helper\PaymentGatewayRequestHelper;
+use App\Helper\ShurjopayHelper;
 use App\Mail\BasicMail;
 use App\Models\AdminNotification;
 use Carbon\Carbon;
@@ -122,7 +123,9 @@ class BuySubscriptionController extends Controller
 
                     if ($request->selected_payment_gateway === 'shurjopay') {
                         try {
-                            return PaymentGatewayRequestHelper::shurjopay()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_subscription_id,$email,$name,$user_type,route('bs.shurjopay.ipn.subscription')));
+                            $ipnUrl    = route('bs.shurjopay.ipn.subscription');
+                            $shurjopay = new ShurjopayHelper($ipnUrl);
+                            return $shurjopay->chargeCustomer($this->buildPaymentArg($total,$title,$description,$last_subscription_id,$email,$name,$user_type,$ipnUrl));
                         }catch (\Exception $e){
                             toastr_error($e->getMessage());
                             return back();

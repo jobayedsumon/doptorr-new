@@ -3,6 +3,7 @@
 namespace Modules\Wallet\Http\Controllers\Client;
 
 use App\Helper\PaymentGatewayRequestHelper;
+use App\Helper\ShurjopayHelper;
 use App\Mail\BasicMail;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -128,7 +129,9 @@ class WalletController extends Controller
         }else{
             if ($request->selected_payment_gateway === 'shurjopay') {
                 try {
-                    return PaymentGatewayRequestHelper::shurjopay()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_deposit_id,$email,$name,route('client.shurjopay.ipn.wallet')));
+                    $ipnUrl    = route('client.shurjopay.ipn.wallet');
+                    $shurjopay = new ShurjopayHelper($ipnUrl);
+                    return $shurjopay->chargeCustomer($this->buildPaymentArg($total,$title,$description,$last_deposit_id,$email,$name,$ipnUrl));
                 }catch (\Exception $e){
                     toastr_error($e->getMessage());
                     return back();

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Helper\Shurjopay;
+use App\Helper\ShurjopayHelper;
 use App\Http\Controllers\Controller;
 use App\Mail\BasicMail;
 use App\Mail\OrderMail;
@@ -25,15 +25,11 @@ class OrderIPNController extends Controller
 
     public function shurjopay_ipn_for_order(Request $request)
     {
-        $shurjopay = new Shurjopay();
-        $shurjopay->setUsername(get_static_option('shurjopay_sandbox_username') ?? get_static_option('shurjopay_live_username')); // provide sandbox id if payment env set to true, otherwise provide live credentials
-        $shurjopay->setPassword(get_static_option('shurjopay_sandbox_password') ?? get_static_option('shurjopay_live_password')); // provide sandbox id if payment env set to true, otherwise provide live credentials
-        $shurjopay->setOrderPrefix(get_static_option('shurjopay_sandbox_order_prefix') ?? get_static_option('shurjopay_live_order_prefix')); // provide sandbox id if payment env set to true, otherwise provide live credentials
-        $shurjopay->setEnv(get_static_option('shurjopay_test_mode') === 'on'); //env must set as boolean, string will not work
-
         try
         {
-            $payment_data = $shurjopay->verify_payment($request);
+            $shurjopay_id = $request->order_id;
+            $shurjopay    = new ShurjopayHelper(route('pro.shurjopay.ipn.order'));
+            $payment_data = $shurjopay->instance->verifyPayment($shurjopay_id);
         }
         catch (ShurjopayException $exception)
         {
@@ -43,14 +39,17 @@ class OrderIPNController extends Controller
         $payment_data = $payment_data[0];
 
         if (isset($payment_data->sp_code) && $payment_data->sp_code === '1000' && isset($payment_data->sp_message) && $payment_data->sp_message === 'Success'){
-            $order_id = $payment_data->value1;
+            $order_id     = $payment_data->value1;
+            $shurjopay_id = $payment_data->order_id;
             $user_id = session()->get('user_id');
             $freelancer_id = session()->get('freelancer_id');
             $project_or_job = session()->get('project_or_job');
             $proposal_id = session()->get('proposal_id_for_order');
-            $this->update_database($order_id, $payment_data->order_id, $user_id, $freelancer_id, $project_or_job, $proposal_id);
+
+            $this->update_database($order_id, $shurjopay_id, $user_id, $freelancer_id, $project_or_job, $proposal_id);
             $this->send_order_mail($order_id,$user_id,$freelancer_id);
             toastr_success('Order  successfully completed');
+
             $new_order_id = getLastOrderId($order_id);
             return redirect()->route('order.user.success.page',$new_order_id);
         }

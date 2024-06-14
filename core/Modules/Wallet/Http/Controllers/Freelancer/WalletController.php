@@ -3,6 +3,7 @@
 namespace Modules\Wallet\Http\Controllers\Freelancer;
 
 use App\Helper\PaymentGatewayRequestHelper;
+use App\Helper\ShurjopayHelper;
 use App\Mail\BasicMail;
 use App\Models\UserEarning;
 use Illuminate\Contracts\Support\Renderable;
@@ -137,7 +138,9 @@ class WalletController extends Controller
         {
             if ($request->selected_payment_gateway === 'shurjopay') {
                 try {
-                    return PaymentGatewayRequestHelper::shurjopay()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_deposit_id,$email,$name,route('freelancer.shurjopay.ipn.wallet')));
+                    $ipnUrl    = route('freelancer.shurjopay.ipn.wallet');
+                    $shurjopay = new ShurjopayHelper($ipnUrl);
+                    return $shurjopay->chargeCustomer($this->buildPaymentArg($total,$title,$description,$last_deposit_id,$email,$name,$ipnUrl));
                 }catch (\Exception $e){
                     toastr_error($e->getMessage());
                     return back();

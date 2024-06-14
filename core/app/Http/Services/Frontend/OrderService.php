@@ -3,6 +3,7 @@
 namespace App\Http\Services\Frontend;
 
 use App\Helper\PaymentGatewayRequestHelper;
+use App\Helper\ShurjopayHelper;
 use App\Mail\OrderMail;
 use App\Models\IndividualCommissionSetting;
 use App\Models\JobProposal;
@@ -288,7 +289,9 @@ class OrderService
 
         if ($request->selected_payment_gateway === 'shurjopay') {
             try {
-                return PaymentGatewayRequestHelper::shurjopay()->charge_customer($this->buildPaymentArg($total,$title,$description,$last_order_id,$email,$name,route('pro.shurjopay.ipn.order')));
+                $ipnUrl    = route('pro.shurjopay.ipn.order');
+                $shurjopay = new ShurjopayHelper($ipnUrl);
+                return $shurjopay->chargeCustomer($this->buildPaymentArg($total,$title,$description,$last_order_id,$email,$name,$ipnUrl));
             }catch (\Exception $e){
                 toastr_error($e->getMessage());
                 return back();
