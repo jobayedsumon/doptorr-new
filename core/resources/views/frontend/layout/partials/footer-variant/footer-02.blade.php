@@ -6,7 +6,7 @@
             <div class="row gx-xxl-5 footer-area-top">
                 {!! render_frontend_sidebar('footer_two') !!}
                 <div class="col-3">
-                    <img src="{{ asset('assets/static/img/shurjopay.jpg') }}" alt="Shurjopay" width="100">
+                    <img src="{{ asset('assets/static/img/shurjopay_payment_methods.png') }}" alt="Shurjopay">
                 </div>
             </div>
 
