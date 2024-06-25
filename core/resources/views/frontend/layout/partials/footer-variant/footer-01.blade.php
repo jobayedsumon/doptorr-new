@@ -5,6 +5,9 @@
 
             <div class="row gx-5 footer-area-top">
                 {!! render_frontend_sidebar('footer_one') !!}
+                <div class="col-3">
+                    <img src="{{ asset('assets/static/img/shurjopay.jpg') }}" alt="Shurjopay" width="100">
+                </div>
             </div>
 
             <div class="copyright-area copyright-border">
